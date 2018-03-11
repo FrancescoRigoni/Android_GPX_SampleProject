@@ -16,12 +16,13 @@ import android.widget.TextView;
 import com.codebutchery.androidgpx.data.GPXSegment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SegmentsActivity extends Activity implements OnItemClickListener {
 	 
 	private ListView mListView = null;
 
-	public static ArrayList<GPXSegment> mSegments = null;
+	public static List<GPXSegment> mSegments = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,15 +74,9 @@ public class SegmentsActivity extends Activity implements OnItemClickListener {
 	
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
-		
 		GPXSegment s = (GPXSegment) mListView.getAdapter().getItem(pos);
-		
 		TrackPointsActivity.mPoints = s.getTrackPoints();
-		
 		Intent intent = new Intent(this, TrackPointsActivity.class);
 		startActivity(intent);
-		
 	}
-
-
 }

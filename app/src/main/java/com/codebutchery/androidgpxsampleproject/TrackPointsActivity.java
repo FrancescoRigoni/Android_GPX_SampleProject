@@ -15,12 +15,13 @@ import com.codebutchery.androidgpx.data.GPXBasePoint;
 import com.codebutchery.androidgpx.data.GPXTrackPoint;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TrackPointsActivity extends Activity {
 	 
 	private ListView mListView = null;
 
-	public static ArrayList<GPXTrackPoint> mPoints = null;
+	public static List<GPXTrackPoint> mPoints = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +29,7 @@ public class TrackPointsActivity extends Activity {
 		
 		setContentView(R.layout.list_activity);
 		
-		mListView = (ListView) findViewById(R.id.lvListView);
+		mListView = findViewById(R.id.lvListView);
 		mListView.setAdapter(new BaseAdapter() {
 
 			@Override
@@ -49,7 +50,7 @@ public class TrackPointsActivity extends Activity {
 			@Override
 			public View getView(int arg0, View recycled, ViewGroup vg) {
 				
-				LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				View v = recycled;
 				if (v == null) v = inflater.inflate(R.layout.lv_item_point, vg, false);
 				
@@ -74,10 +75,6 @@ public class TrackPointsActivity extends Activity {
 				
 				return v;
 			}
-			
 		});
-
 	}
-
-
 }

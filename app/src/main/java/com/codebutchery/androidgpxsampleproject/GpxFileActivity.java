@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,19 +23,18 @@ import com.codebutchery.androidgpx.print.GPXFilePrinter;
 
 
 public class GpxFileActivity extends Activity implements OnItemClickListener, GPXFilePrinter.GPXFilePrinterListener {
-	 
-	private ListView mListView = null;
 
-	public static GPXDocument mDocument = null;
+    public static GPXDocument mDocument;
+    private ProgressDialog mProgressDialog;
+    private GPXFilePrinter mPrinter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.gpx_file_activity);
-		mListView = (ListView) findViewById(R.id.lvListView);
+        ListView mListView = findViewById(R.id.lvListView);
 		mListView.setAdapter(new BaseAdapter() {
-
 			@Override
 			public int getCount() {
 				return 4;
@@ -57,8 +57,8 @@ public class GpxFileActivity extends Activity implements OnItemClickListener, GP
 				View v = recycled;
 				if (v == null) v = inflater.inflate(R.layout.lv_item_title_subtitle, vg, false);
 				
-				TextView tvTitle = (TextView) v.findViewById(R.id.tvTitle);
-				TextView tvSubtitle = (TextView) v.findViewById(R.id.tvSubtitle);
+				TextView tvTitle = v.findViewById(R.id.tvTitle);
+				TextView tvSubtitle = v.findViewById(R.id.tvSubtitle);
 				
 				if (arg0 == 0) {
 					tvTitle.setText("Waypoints");
@@ -79,91 +79,74 @@ public class GpxFileActivity extends Activity implements OnItemClickListener, GP
 				
 				return v;
 			}
-			
 		});
-		
 		mListView.setOnItemClickListener(this);
-		
 	}
-	
-	@Override
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPrinter != null) {
+            mPrinter.cancelPrint();
+        }
+    }
+
+    @Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
-		
 		if (pos == 0) {
-			
 			WayPointsActivity.mPoints = mDocument.getWayPoints();
-			
-			Intent intent = new Intent(this, WayPointsActivity.class);
+			final Intent intent = new Intent(this, WayPointsActivity.class);
 			startActivity(intent);
-			
 		}
 		else if (pos == 1) {
-			
 			TracksActivity.mTracks = mDocument.getTracks();
-			
-			Intent intent = new Intent(this, TracksActivity.class);
+			final Intent intent = new Intent(this, TracksActivity.class);
 			startActivity(intent);
-			
 		}
 		else if (pos == 2) {
-
             RoutesActivity.mRoutes = mDocument.getRoutes();
-
-            Intent intent = new Intent(this, RoutesActivity.class);
+            final Intent intent = new Intent(this, RoutesActivity.class);
             startActivity(intent);
-			
 		}
         else if (pos == 3) {
-
-            new GPXFilePrinter(mDocument, "/mnt/sdcard/output.gpx", this).print();
-
+            mPrinter = new GPXFilePrinter(this);
+            mPrinter.print(mDocument,
+					Environment.getExternalStorageDirectory() + "/output.gpx");
         }
-		
 	}
-	
-	private ProgressDialog mProgressDialog = null;
 
 	@Override
 	public void onGPXPrintStarted() {
-		
 		mProgressDialog = ProgressDialog.show(this, "Printing GPX to file", "Started");
-		
 	}
 
 	@Override
 	public void onGPXPrintCompleted() {
-		
 		mProgressDialog.dismiss();
-		
 		new AlertDialog.Builder(this)
 	    .setTitle("Done")
 	    .setMessage("File was printed, press ok to send it via email")
 	    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int which) { 
 	            dialog.cancel();
-	            
-	            Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
+	            Intent emailIntent = new Intent(Intent.ACTION_SEND);
 	            emailIntent.putExtra(Intent.EXTRA_EMAIL, "");
 	            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "GPX file");
 	            emailIntent.setType("plain/text");
 	            emailIntent.putExtra(Intent.EXTRA_TEXT, "Here's your file");
-	            emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + "/mnt/sdcard/output.gpx"));
+	            emailIntent.putExtra(Intent.EXTRA_STREAM,
+						Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/output.gpx"));
 
 	            startActivity(emailIntent);
-	             
-	            
 	        }
 	     })
 	     .show();
-		
 	}
 
 	@Override
 	public void onGPXPrintError(String message) {
-		
 		mProgressDialog.dismiss();
-		
 		new AlertDialog.Builder(this)
 	    .setTitle("Error")
 	    .setMessage("An error occurred while printing: " + message)
@@ -173,8 +156,5 @@ public class GpxFileActivity extends Activity implements OnItemClickListener, GP
 	        }
 	     })
 	     .show();
-		
 	}
-
-
 }

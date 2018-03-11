@@ -16,13 +16,13 @@ import android.widget.TextView;
 import com.codebutchery.androidgpx.data.GPXRoute;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RoutesActivity extends Activity implements OnItemClickListener {
 
-
     private ListView mListView = null;
 
-    public static ArrayList<GPXRoute> mRoutes = null;
+    public static List<GPXRoute> mRoutes = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,24 +71,15 @@ public class RoutesActivity extends Activity implements OnItemClickListener {
 
                 return v;
             }
-
         });
-
         mListView.setOnItemClickListener(this);
-
     }
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
-
         GPXRoute r = (GPXRoute) mListView.getAdapter().getItem(pos);
-
         RoutePointsActivity.mPoints = r.getRoutePoints();
-
-        Intent intent = new Intent(this, RoutePointsActivity.class);
+        final Intent intent = new Intent(this, RoutePointsActivity.class);
         startActivity(intent);
-
     }
-
-
 }

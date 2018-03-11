@@ -14,7 +14,8 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="MainActivity">
+            android:label="MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,32 +24,32 @@
         </activity>
         <activity
             android:name=".GpxFileActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="Gpx File"></activity>
+            android:label="Gpx File"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".TracksActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="Tracks"></activity>
+            android:label="Tracks"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".SegmentsActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="Segments"></activity>
+            android:label="Segments"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".TrackPointsActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="Track Points"></activity>
+            android:label="Track Points"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".WayPointsActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="Way Points"></activity>
+            android:label="Way Points"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".RoutePointsActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="Route Points"></activity>
+            android:label="Route Points"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".RoutesActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="Routes"></activity>
+            android:label="Routes"
+            android:screenOrientation="portrait"/>
 
     </application>
 

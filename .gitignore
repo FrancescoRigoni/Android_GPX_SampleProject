@@ -1,4 +1,10 @@
 .gradle
+.idea/
+Android_GPX_SampleProject.iml
+app/app.iml
+gradlew
+gradlew.bat
+.gradle
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries

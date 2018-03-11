@@ -13,13 +13,13 @@ import android.widget.TextView;
 import com.codebutchery.androidgpx.data.GPXBasePoint;
 import com.codebutchery.androidgpx.data.GPXWayPoint;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class WayPointsActivity extends Activity {
 	 
 	private ListView mListView = null;
 
-	public static ArrayList<GPXWayPoint> mPoints = null;
+	public static List<GPXWayPoint> mPoints = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,7 @@ public class WayPointsActivity extends Activity {
 		
 		setContentView(R.layout.list_activity);
 		
-		mListView = (ListView) findViewById(R.id.lvListView);
+		mListView = findViewById(R.id.lvListView);
 		mListView.setAdapter(new BaseAdapter() {
 
 			@Override
@@ -54,13 +54,13 @@ public class WayPointsActivity extends Activity {
 				
 				GPXBasePoint t = (GPXBasePoint) getItem(arg0);
 				
-				TextView tvName = (TextView) v.findViewById(R.id.tvName);
-				TextView tvLatLon = (TextView) v.findViewById(R.id.tvLatLon);
-				TextView tvTimestamp = (TextView) v.findViewById(R.id.tvTimestamp);
-				TextView tvDescription = (TextView) v.findViewById(R.id.tvDescription);
-				TextView tvType = (TextView) v.findViewById(R.id.tvType);
-				TextView tvHdopVdop = (TextView) v.findViewById(R.id.tvHdopVdop);
-				TextView tvEle = (TextView) v.findViewById(R.id.tvEle);
+				TextView tvName = v.findViewById(R.id.tvName);
+				TextView tvLatLon = v.findViewById(R.id.tvLatLon);
+				TextView tvTimestamp = v.findViewById(R.id.tvTimestamp);
+				TextView tvDescription = v.findViewById(R.id.tvDescription);
+				TextView tvType = v.findViewById(R.id.tvType);
+				TextView tvHdopVdop = v.findViewById(R.id.tvHdopVdop);
+				TextView tvEle = v.findViewById(R.id.tvEle);
 
 				tvName.setText("Name " + t.getName());
 				tvLatLon.setText("Lat: " + t.getLatitude() + " Lon: " + t.getLongitude());
@@ -73,10 +73,6 @@ public class WayPointsActivity extends Activity {
 				
 				return v;
 			}
-			
 		});
-
 	}
-
-
 }

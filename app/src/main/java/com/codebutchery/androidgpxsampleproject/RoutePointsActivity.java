@@ -13,13 +13,13 @@ import android.widget.TextView;
 import com.codebutchery.androidgpx.data.GPXBasePoint;
 import com.codebutchery.androidgpx.data.GPXRoutePoint;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class RoutePointsActivity extends Activity {
 	 
 	private ListView mListView = null;
 
-	public static ArrayList<GPXRoutePoint> mPoints = null;
+	public static List<GPXRoutePoint> mPoints = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,7 @@ public class RoutePointsActivity extends Activity {
 		
 		setContentView(R.layout.list_activity);
 		
-		mListView = (ListView) findViewById(R.id.lvListView);
+		mListView = findViewById(R.id.lvListView);
 		mListView.setAdapter(new BaseAdapter() {
 
 			@Override
@@ -73,10 +73,6 @@ public class RoutePointsActivity extends Activity {
 				
 				return v;
 			}
-			
 		});
-
 	}
-
-
 }

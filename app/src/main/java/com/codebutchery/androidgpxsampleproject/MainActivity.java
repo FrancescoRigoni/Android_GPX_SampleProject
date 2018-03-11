@@ -8,9 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -27,22 +24,22 @@ import com.codebutchery.androidgpx.data.GPXSegment;
 import com.codebutchery.androidgpx.data.GPXTrack;
 import com.codebutchery.androidgpx.data.GPXTrackPoint;
 import com.codebutchery.androidgpx.data.GPXWayPoint;
-import com.codebutchery.androidgpx.xml.GpxParser;
-import com.codebutchery.androidgpx.xml.GpxParserHandler;
-
+import com.codebutchery.androidgpx.xml.GPXListeners;
+import com.codebutchery.androidgpx.xml.GPXParser;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends Activity implements OnItemClickListener,
-                GpxParser.GpxParserListener, GpxParserHandler.GpxParserProgressListener {
+		GPXListeners.GPXParserListener, GPXListeners.GPXParserProgressListener {
 	 
 	private ListView mListView = null;
 	private static ArrayList<String> mFiles = null;
+	private GPXParser mParser;
 
     static {
-		mFiles = new ArrayList<String>();
+		mFiles = new ArrayList<>();
         mFiles.add("boise_routes.gpx");
 		mFiles.add("bogus_basin.gpx");
 		mFiles.add("boise_front.gpx");
@@ -61,7 +58,7 @@ public class MainActivity extends Activity implements OnItemClickListener,
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.main_activity);
-		mListView = (ListView) findViewById(R.id.lvListView);
+		mListView = findViewById(R.id.lvListView);
 		mListView.setAdapter(new BaseAdapter() {
 
 			@Override
@@ -86,45 +83,34 @@ public class MainActivity extends Activity implements OnItemClickListener,
 				View v = recycled;
 				if (v == null) v = inflater.inflate(R.layout.lv_item_title_only, vg, false);
 				
-				TextView tvTitle = (TextView) v.findViewById(R.id.tvTitle);
+				TextView tvTitle = v.findViewById(R.id.tvTitle);
 				tvTitle.setText((String) getItem(arg0));
 				
 				return v;
 			}
-			
 		});
-		
 		mListView.setOnItemClickListener(this);
-		
-		
-		/*
-		// Code to test date time parsing
-		String first = "2012-10-13T17:18:33Z"; 
-					  //2012-10-13T08:44:31Z
-		
-		 
-		Log.e("---", "Parsing " + first); 
-		Date date = GPXBasePoint.parseTimestampIntoDate(first);
-		 
-
-		if (date != null) Log.e("---", "Output: " + GPXBasePoint.getTimeStampAsString(date));
-		*/
-		
 	}
-	
-	@Override
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mParser != null) {
+            mParser.cancelParse();
+        }
+    }
+
+    @Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
-		
-		String fileName = (String) mListView.getAdapter().getItem(pos);
+		final String fileName = (String) mListView.getAdapter().getItem(pos);
 		try {
         	InputStream input = getAssets().open(fileName);
         	// The GpxParser automatically closes the InputStream so we do not have to bother about it
-        	new GpxParser(input, this, this).parse();
-        	
+			mParser = new GPXParser(this, this);
+			mParser.parse(input);
 		} catch (IOException e) {
 			Toast.makeText(this, "IOExeption opening file", Toast.LENGTH_SHORT).show();
 		}
-		
 	}
 
     @Override
@@ -167,10 +153,8 @@ public class MainActivity extends Activity implements OnItemClickListener,
 		mProgressDialog.dismiss();
 		
 		GpxFileActivity.mDocument = document;
-		
 		Intent intent = new Intent(this, GpxFileActivity.class);
 		startActivity(intent);
-		
 	}
 
 	@Override
@@ -187,5 +171,4 @@ public class MainActivity extends Activity implements OnItemClickListener,
 	     })
 	     .show();
 	}
-
 }

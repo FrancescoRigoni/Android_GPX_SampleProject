@@ -16,12 +16,13 @@ import android.widget.TextView;
 import com.codebutchery.androidgpx.data.GPXTrack;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TracksActivity extends Activity implements OnItemClickListener {
 	 
 	private ListView mListView = null;
 
-	public static ArrayList<GPXTrack> mTracks = null;
+	public static List<GPXTrack> mTracks = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public class TracksActivity extends Activity implements OnItemClickListener {
 		
 		setContentView(R.layout.list_activity);
 		
-		mListView = (ListView) findViewById(R.id.lvListView);
+		mListView = findViewById(R.id.lvListView);
 		mListView.setAdapter(new BaseAdapter() {
 
 			@Override
@@ -72,22 +73,14 @@ public class TracksActivity extends Activity implements OnItemClickListener {
 			}
 			
 		});
-		
 		mListView.setOnItemClickListener(this);
-		
 	}
 	
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
-		
-		GPXTrack t = (GPXTrack) mListView.getAdapter().getItem(pos);
-		
+		final GPXTrack t = (GPXTrack) mListView.getAdapter().getItem(pos);
 		SegmentsActivity.mSegments = t.getSegments();
-		
-		Intent intent = new Intent(this, SegmentsActivity.class);
+		final Intent intent = new Intent(this, SegmentsActivity.class);
 		startActivity(intent);
-		
 	}
-
-
 }
